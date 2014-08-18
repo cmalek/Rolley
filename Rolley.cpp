@@ -48,7 +48,7 @@ namespace rolley
         } else {
             this->backward(speed);
         }
-        while (this->encoders_distance() < meters) {
+        while (fabs(this->encoders_distance()) < meters) {
             delay(100);
         }
         this->stop();
@@ -86,20 +86,25 @@ namespace rolley
         */
         this->_motors.spin(direction, speed);
         if (direction == LEFT) {
+            Serial.println("    spinning LEFT");
             this->_encoders.set_left_direction(BACK);
             this->_encoders.set_right_direction(FORWARD);
         } else {
+            Serial.println("    spinning RIGHT");
             this->_encoders.set_left_direction(FORWARD);
             this->_encoders.set_right_direction(BACK);
         }
     }
 
-    void Rolley::spin_degrees(rolley::directions_t direction, uint8_t speed, int degrees)
+    void Rolley::spin_degrees(rolley::directions_t direction, uint8_t speed, float degrees)
     {
+        float angle;
         this->encoders_reset();
         this->spin(direction, speed);
-        while (abs(this->encoders_angle()) < degrees) {
+        angle = this->encoders_angle();
+        while (fabs(angle) < degrees) {
             delay(50);
+            angle = this->encoders_angle();
         }
         this->stop();
     }
@@ -264,13 +269,13 @@ namespace rolley
     {
         String status = String("");
         status += this->_servo.test();
-        status += '|';
+        status += "|";
         status += this->_sonar.test();
-        status += '|';
+        status += "|";
         status += this->_bump.test();
-        status += '|';
+        status += "|";
         status += this->_encoders.test();
-        status += '|';
+        status += "|";
         status += this->_cliff.test();
         Serial.println(status);
     }

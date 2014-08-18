@@ -73,7 +73,7 @@ namespace rolley
 
     Encoders::Encoders() {}
 
-    void Encoders::setup(int wheel_width)
+    void Encoders::setup(float wheel_width)
     {
         this->_wheel_width = wheel_width;
 
@@ -131,7 +131,12 @@ namespace rolley
         float left_distance = this->left();
         float right_distance = this->right();
 
-        return(((right_distance - left_distance)/this->_wheel_width)*(180/3.1415926535));
+        Serial.println(this->test());
+        if (right_distance == left_distance) {
+            return 0;
+        } else {
+            return(((right_distance - left_distance)/this->_wheel_width)*(180/3.1415926535));
+        }
     }
 
     float Encoders::convert(int count)

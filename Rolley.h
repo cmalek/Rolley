@@ -41,7 +41,7 @@
  * ======================= */
 
 #define SONAR_MAX_DISTANCE          200
-#define WHEEL_BASE                  14.5
+#define WHEEL_BASE                  .145
 
 namespace rolley
 {
@@ -56,7 +56,7 @@ namespace rolley
             void backward(uint8_t speed);
             void backward_meters(uint8_t speed, float meters);
             void spin(rolley::directions_t direction, uint8_t speed);
-            void spin_degrees(rolley::directions_t direction, uint8_t speed, int degrees);
+            void spin_degrees(rolley::directions_t direction, uint8_t speed, float degrees);
             void stop();
 
             float sonar_get_distance();

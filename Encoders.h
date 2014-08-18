@@ -50,7 +50,7 @@ namespace rolley
 
             //! @brief Setup the interrupt callbacks
             //!
-            void setup(int);
+            void setup(float);
 
             //! @brief Compute the left distance traveled
             //!
@@ -73,7 +73,7 @@ namespace rolley
 
             String test();
         private:
-            int _wheel_width;
+            float _wheel_width;
 
             float convert(int);
 
