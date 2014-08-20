@@ -33,35 +33,11 @@ namespace rolley
         /* 
         * Go forward.
         *
-        * param speed: 0-250
+        * :param speed: 0-100, motors will move at this speed
         */
         this->_motors.forward(speed);
         this->_encoders.set_left_direction(FORWARD);
         this->_encoders.set_right_direction(FORWARD);
-    }
-
-    void Rolley::move_meters(uint8_t speed, float meters, int direction)
-    {
-        this->encoders_reset();
-        if (direction == MOTOR_FORWARD) {
-            this->forward(speed);
-        } else {
-            this->backward(speed);
-        }
-        while (fabs(this->encoders_distance()) < meters) {
-            delay(100);
-        }
-        this->stop();
-    }
-
-    void Rolley::forward_meters(uint8_t speed, float meters)
-    {
-        this->move_meters(speed, meters, MOTOR_FORWARD);
-    }
-
-    void Rolley::backward_meters(uint8_t speed, float meters)
-    {
-        this->move_meters(speed, meters, MOTOR_REVERSE);
     }
 
     void Rolley::backward(uint8_t speed)
@@ -75,6 +51,7 @@ namespace rolley
         this->_encoders.set_left_direction(BACK);
         this->_encoders.set_right_direction(BACK);
     }
+
 
     void Rolley::spin(rolley::directions_t direction, uint8_t speed)
     {
@@ -96,7 +73,84 @@ namespace rolley
         }
     }
 
-    void Rolley::spin_degrees(rolley::directions_t direction, uint8_t speed, float degrees)
+    //
+    // MOTORS: measured movement
+    //
+
+    void Rolley::_move_meters_setup(uint8_t speed, int direction)
+    {
+        this->encoders_reset();
+        if (direction == MOTOR_FORWARD) {
+            this->forward(speed);
+        } else {
+            this->backward(speed);
+        }
+	}
+
+    void Rolley::_move_meters_now(uint8_t speed, float meters, int direction)
+    {
+        /*
+         * This will cause the robot to move approximately
+         * `meters` meters in `direction` (where direction
+         * is one in [MOTOR_FORWARD, MOTOR_BACKWARD]) at
+         * speed `speed`, and then stop. Don't return until
+		 * all movement is done.
+         *
+         * :param speed:  0-100, motors will move at this speed
+         * :param meters: robot will move approximately this
+         *                many meters
+         * :param direction:  one of MOTOR_FORWARD, MOTOR_BACKWARD
+         */
+		this->_move_meters_setup(speed, direction);
+        while (fabs(this->encoders_distance()) < meters) {
+            delay(100);
+        }
+        this->stop();
+    }
+
+    void Rolley::forward_meters_now(uint8_t speed, float meters)
+    {
+        /*
+         * This will cause the robot to move approximately
+         * `meters` meters forward at speed `speed`, and then 
+         * stop.  Don't return until all movement is done.
+         *
+         * :param speed:  0-100, motors will move at this speed
+         * :param meters: robot will move approximately this
+         *                many meters
+         */
+        this->_move_meters_now(speed, meters, MOTOR_FORWARD);
+    }
+
+    void Rolley::backward_meters_now(uint8_t speed, float meters)
+    {
+        /*
+         * This will cause the robot to move approximately
+         * `meters` meters backward at speed `speed`, and then 
+         * stop.
+         *
+         * :param speed:  0-100, motors will move at this speed
+         * :param meters: robot will move approximately this
+         *                many meters
+         */
+        this->_move_meters_now(speed, meters, MOTOR_REVERSE);
+    }
+
+	void Rolley::move_meters(uint8_t speed, float meters, int direction)
+	{
+		this->_move_meters_setup(speed, direction);
+		this->_move_meters = meters;
+	}
+
+	boolean Rolley::is_done_moving()
+	{
+        if (fabs(this->encoders_distance()) >= this->_move_meters) {
+			return true;
+		}
+		return false;
+	}
+
+    void Rolley::spin_degrees_now(rolley::directions_t direction, uint8_t speed, float degrees)
     {
         float angle;
         this->encoders_reset();

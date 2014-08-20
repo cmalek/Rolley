@@ -25,7 +25,6 @@ namespace rolley
         this->_middle.interval(5);
         this->_right.attach(right_pin); 
         this->_right.interval(5);
-        //
     }
 
 

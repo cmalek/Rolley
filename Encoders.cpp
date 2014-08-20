@@ -131,12 +131,7 @@ namespace rolley
         float left_distance = this->left();
         float right_distance = this->right();
 
-        Serial.println(this->test());
-        if (right_distance == left_distance) {
-            return 0;
-        } else {
-            return(((right_distance - left_distance)/this->_wheel_width)*(180/3.1415926535));
-        }
+        return(((right_distance - left_distance)/this->_wheel_width)*(180/3.1415926535));
     }
 
     float Encoders::convert(int count)
@@ -176,11 +171,16 @@ namespace rolley
     String Encoders::test()
     {
         String response = String("");
+        int result;
+        char tmp[10];
+
         response += "EL";
-        response += this->left();
+        result = snprintf(tmp, 10, "%0.4f", (double) this->left());
+        response += tmp;
         response += ";";
         response += "ER";
-        response += this->right();
+        result = snprintf(tmp, 10, "%0.4f", (double) this->right());
+        response += tmp;
         return(response);
     }
 }

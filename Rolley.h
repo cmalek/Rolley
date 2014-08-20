@@ -52,12 +52,16 @@ namespace rolley
             void setup(Servo *, NewPing *);
 
             void forward(uint8_t speed);
-            void forward_meters(uint8_t speed, float meters);
             void backward(uint8_t speed);
-            void backward_meters(uint8_t speed, float meters);
-            void spin(rolley::directions_t direction, uint8_t speed);
-            void spin_degrees(rolley::directions_t direction, uint8_t speed, float degrees);
             void stop();
+            void spin(rolley::directions_t, uint8_t);
+
+            void forward_meters_now(uint8_t, float);
+            void backward_meters_now(uint8_t, float);
+            void spin_degrees_now(rolley::directions_t, uint8_t, float);
+
+			void move_meters(uint8_t, float, int);
+			boolean is_done_moving();
 
             float sonar_get_distance();
             boolean is_sonar_wall();
@@ -89,7 +93,9 @@ namespace rolley
             void motor_test();
             void sensor_test();
         private:
-            void move_meters(uint8_t speed, float meters, int direction);
+            void _move_meters_now(uint8_t, float, int);
+            void _move_meters_setup(uint8_t, int);
+			float _move_meters;
             rolley::Drive _motors;
             rolley::Bump _bump;
             rolley::RolleyServo _servo;

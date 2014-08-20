@@ -35,8 +35,12 @@ namespace rolley
     String Sonar::test()
     {
         String response = String("");
+        char tmp[12];
+        int result;
+
         response += "sD";
-        response += this->get_distance();
+        result = snprintf(tmp, 10, "%.2f", (double) this->get_distance());
+        response += tmp;
         response += ";";
         response += "sW";
         response += this->is_wall();
