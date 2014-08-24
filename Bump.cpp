@@ -41,14 +41,14 @@ namespace rolley
         int left = this->_left.read();
         int right = this->_right.read();
         int middle = this->_middle.read();
-        return((left == LOW) || (middle == LOW) || (right == LOW));
+        return((left == HIGH) || (middle == HIGH) || (right == HIGH));
     }
 
     boolean Bump::is_front_bump()
     {
         this->update();
         int middle = this->_middle.read();
-        return(middle == LOW);
+        return(middle == HIGH);
     }
 
     boolean Bump::is_left_bump()
@@ -57,7 +57,7 @@ namespace rolley
         int left = this->_left.read();
         int right = this->_right.read();
         int middle = this->_middle.read();
-        return((left == LOW) && (middle != LOW) && (right != LOW));
+        return((left == HIGH) && (middle != HIGH) && (right != HIGH));
     }
 
     boolean Bump::is_right_bump()
@@ -66,7 +66,7 @@ namespace rolley
         int left = this->_left.read();
         int right = this->_right.read();
         int middle = this->_middle.read();
-        return((right == LOW) && (middle != LOW) && (left != LOW));
+        return((right == HIGH) && (middle != HIGH) && (left != HIGH));
     }
 
     // 
