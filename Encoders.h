@@ -45,8 +45,8 @@ namespace rolley
 
             //! @brief Used to reduce ambiguity in pin assignment
             //!
-            static const uint8_t LeftWheelEncoder  = 14;
-            static const uint8_t RightWheelEncoder = 15;
+            static const uint8_t LeftWheelEncoder  = A0;
+            static const uint8_t RightWheelEncoder = A1;
 
             //! @brief Setup the interrupt callbacks
             //!
@@ -71,7 +71,7 @@ namespace rolley
             float distance();
             float angle();
 
-            String test();
+            char* test();
         private:
             float _wheel_width;
 

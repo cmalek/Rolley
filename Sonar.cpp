@@ -32,18 +32,13 @@ namespace rolley
         return false;
     }
 
-    String Sonar::test()
+    char* Sonar::test()
     {
-        String response = String("");
-        char tmp[12];
+        static char response[16];
         int result;
+        char tmp[5];
 
-        response += "sD";
-        result = snprintf(tmp, 10, "%.2f", (double) this->get_distance());
-        response += tmp;
-        response += ";";
-        response += "sW";
-        response += this->is_wall();
+        result = snprintf(response, 15, "sD%s;sW%d", dtostrf(this->get_distance(), 4, 1, tmp), this->is_wall());
         return(response);
     }
 

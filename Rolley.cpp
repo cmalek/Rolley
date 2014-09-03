@@ -22,6 +22,7 @@ namespace rolley
         this->_sonar.setup(sonar);
         this->_encoders.setup(WHEEL_BASE);
         this->_cliff.setup(CLIFF_LEFT_PIN, CLIFF_RIGHT_PIN);
+        this->_compass.setup();
     }
 
     //
@@ -152,16 +153,28 @@ namespace rolley
 
     void Rolley::spin_degrees_now(rolley::directions_t direction, uint8_t speed, float degrees)
     {
-        float angle;
-        this->encoders_reset();
+        float start_angle = this->compass_heading();
         this->spin(direction, speed);
-        angle = this->encoders_angle();
-        while (fabs(angle) < degrees) {
+        while (fabs(this->compass_heading() - start_angle) < degrees) {
             delay(50);
-            angle = this->encoders_angle();
         }
         this->stop();
     }
+
+    void Rolley::spin_degrees(rolley::directions_t direction, uint8_t speed, float degrees)
+    {
+        this->_start_angle = this->compass_heading();
+        this->_spin_angle = degrees;
+        this->spin(direction, speed);
+    }
+    
+	boolean Rolley::is_done_spinning()
+	{
+        if (fabs(this->compass_heading() - this->_start_angle) >= this->_spin_angle) {
+			return true;
+		}
+		return false;
+	}
 
     void Rolley::stop()
     {
@@ -295,11 +308,21 @@ namespace rolley
         this->encoders_reset_left_distance();
         this->encoders_reset_right_distance();
     }
-
-    float Rolley::encoders_angle()
+   
+    // 
+    // COMPASS
+    //
+   
+    void Rolley::compass_update()
     {
-        return this->_encoders.angle();
+        this->_compass.update();
     }
+
+    float Rolley::compass_heading()
+    {
+        return this->_compass.heading();
+    }
+
 
     // 
     // TEST
@@ -321,16 +344,16 @@ namespace rolley
 
     void Rolley::sensor_test()
     {
-        String status = String("");
-        status += this->_servo.test();
-        status += "|";
-        status += this->_sonar.test();
-        status += "|";
-        status += this->_bump.test();
-        status += "|";
-        status += this->_encoders.test();
-        status += "|";
-        status += this->_cliff.test();
-        Serial.println(status);
+        Serial.print(this->_servo.test());
+        Serial.print("|");
+        Serial.print(this->_sonar.test());
+        Serial.print("|");
+        Serial.print(this->_bump.test());
+        Serial.print("|");
+        Serial.print(this->_encoders.test());
+        Serial.print("|");
+        Serial.print(this->_cliff.test());
+        Serial.print("|");
+        Serial.println(this->_compass.test());
     }
 }

@@ -1,4 +1,5 @@
 #include <Encoders.h>
+#include <RolleyCommon.h>
 #include <Arduino.h>
 
 static volatile int left_count = 0;
@@ -17,8 +18,8 @@ ISR(PCINT1_vect)
 
   // Get the value at the pins
   //
-  const int left = PINC & (1 << 4);
-  const int right = PINC & (1 << 5);
+  const int left = PINC & (1 << 0);
+  const int right = PINC & (1 << 1);
 
   // Determine which pin to update
   // CPM: I admit that I don't understand why we're XORing
@@ -44,14 +45,14 @@ namespace rolley
     inline void ResetLeft()
     {
         noInterrupts();
-        left_count = 0;
+        left_count = 30;
         interrupts();
     }
 
     inline void ResetRight()
     {
         noInterrupts();
-        right_count = 0;
+        right_count = 30;
         interrupts();
     }
 
@@ -94,7 +95,7 @@ namespace rolley
         // Pin 14 for left wheel, Pin 15 for the right wheel
         //
         PCICR = 1 << PCIE1;
-        PCMSK1 |= (1 << PCINT12) | (1 << PCINT13);
+        PCMSK1 |= (1 << PCINT8) | (1 << PCINT9);
         MCUCR = (1 << ISC00);
 
         // Clear the interrupt flags in case they were set before for any reason.
@@ -124,14 +125,6 @@ namespace rolley
         } else {
             right_increment = -1;
         }
-    }
-
-    float Encoders::angle()
-    {
-        float left_distance = this->left();
-        float right_distance = this->right();
-
-        return(((right_distance - left_distance)/this->_wheel_width)*(180/3.1415926535));
     }
 
     float Encoders::convert(int count)
@@ -168,19 +161,14 @@ namespace rolley
         return ((this->left() + this->right())/2);
     }
 
-    String Encoders::test()
+    char* Encoders::test()
     {
-        String response = String("");
         int result;
-        char tmp[10];
+        static char response[17];
+        char left[7];
+        char right[7];
 
-        response += "EL";
-        result = snprintf(tmp, 10, "%0.4f", (double) this->left());
-        response += tmp;
-        response += ";";
-        response += "ER";
-        result = snprintf(tmp, 10, "%0.4f", (double) this->right());
-        response += tmp;
+        result = snprintf(response, 16, "EL%s;ER%s", dtostrf(this->left(), 5, 2, left), dtostrf(this->right(), 5, 2, right));
         return(response);
     }
 }

@@ -39,14 +39,12 @@ namespace rolley
         return(digitalRead(this->_right_pin) && !digitalRead(this->_left_pin));
     }
 
-    String Cliff::test()
+    char* Cliff::test()
     {
-        String response = String("");
-        response += this->is_left_cliff() ? "CL" : "0";
-        response += ";";
-        response += this->is_front_cliff() ? "CF" : "0";
-        response += ";";
-        response += this->is_right_cliff() ? "CR" : "0";
+        int result;
+        static char response[13];
+
+        result = snprintf(response, 12, "CL%d;CF%d;CR%d", this->is_left_cliff(), this->is_front_cliff(), this->is_right_cliff());
         return(response);
     }
 

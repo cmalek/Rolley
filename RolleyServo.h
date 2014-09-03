@@ -16,7 +16,7 @@ namespace rolley
             void set_scan_range(int, int);
             void scan();
 
-            String test();
+            char* test();
         private:
             Servo *_servo;
             int _range_start;

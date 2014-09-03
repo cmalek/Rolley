@@ -17,7 +17,7 @@ namespace rolley
             boolean is_left_bump();
             boolean is_right_bump();
 
-            String test();
+            char* test();
         private:
             Bounce _left;
             Bounce _middle;

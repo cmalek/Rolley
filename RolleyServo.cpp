@@ -62,15 +62,13 @@ namespace rolley
         delay(10);
     }
 
-    String RolleyServo::test()
+    char* RolleyServo::test()
     {
+        int result;
+        static char response[10];
+
         this->scan();
-        String response = String("");
-        response += "SP";
-        response += this->get_position();
-        response += ";";
-        response += "SI";
-        response += this->_increment;
+        result = snprintf(response, 10, "SP%03d;SI%+d", this->get_position(), this->_increment);
         return(response);
     }
 }

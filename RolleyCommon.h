@@ -5,6 +5,7 @@
 namespace rolley
 {
     enum directions_t { LEFT, RIGHT, BACK, FORWARD };
+    
 }
 
 #endif

@@ -14,7 +14,7 @@ namespace rolley
             boolean is_left_cliff();
             boolean is_right_cliff();
 
-            String test();
+            char* test();
         private:
             uint8_t _left_pin;
             uint8_t _right_pin;

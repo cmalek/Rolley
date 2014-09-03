@@ -8,7 +8,7 @@
 #include <RolleyServo.h>
 #include <Sonar.h>
 #include <Cliff.h>
-
+#include <Compass.h>
 
 // Motors 
 #define LEFT_MOTOR_DIRECTION_PIN    4
@@ -28,13 +28,17 @@
 #define BUMP_RIGHT_PIN              12
 #define BUMP_MIDDLE_PIN             13
 
-// Wheel encoders
-#define ENCODER_LEFT_PIN            14
-#define ENCODER_RIGHT_PIN           15
+// I2C lines (Compass)
+#define I2C_SDL_PIN                 14
+#define I2C_SDA_PIN                 15
 
 // Cliff sensors
 #define CLIFF_LEFT_PIN              16
 #define CLIFF_RIGHT_PIN             17
+
+// Wheel encoders
+#define ENCODER_LEFT_PIN            18
+#define ENCODER_RIGHT_PIN           19
 
 /* =======================
  * Other definitions
@@ -58,10 +62,13 @@ namespace rolley
 
             void forward_meters_now(uint8_t, float);
             void backward_meters_now(uint8_t, float);
-            void spin_degrees_now(rolley::directions_t, uint8_t, float);
 
 			void move_meters(uint8_t, float, int);
 			boolean is_done_moving();
+
+            void spin_degrees_now(rolley::directions_t, uint8_t, float);
+            void spin_degrees(rolley::directions_t, uint8_t, float);
+			boolean is_done_spinning();
 
             float sonar_get_distance();
             boolean is_sonar_wall();
@@ -88,7 +95,9 @@ namespace rolley
             void encoders_reset_right_distance();
             void encoders_reset();
             float encoders_distance();
-            float encoders_angle();
+
+            void compass_update();
+            float compass_heading();
 
             void motor_test();
             void sensor_test();
@@ -96,12 +105,15 @@ namespace rolley
             void _move_meters_now(uint8_t, float, int);
             void _move_meters_setup(uint8_t, int);
 			float _move_meters;
+			float _spin_angle;
+			float _start_angle;
             rolley::Drive _motors;
             rolley::Bump _bump;
             rolley::RolleyServo _servo;
             rolley::Sonar _sonar;
             rolley::Encoders _encoders;
             rolley::Cliff _cliff;
+            rolley::Compass _compass;
     };
 }
 #endif

@@ -73,14 +73,12 @@ namespace rolley
     // TEST
     //
 
-    String Bump::test()
+    char* Bump::test()
     {
-        String response = String("");
-        response += this->is_left_bump() ? "BL" : "0";
-        response += ";";
-        response += this->is_front_bump() ? "BF" : "0";
-        response += ";";
-        response += this->is_right_bump() ? "BR" : "0";
+        int result;
+        static char response[13];
+
+        result = snprintf(response, 12, "BL%d;BF%d;BR%d", this->is_left_bump(), this->is_front_bump(), this->is_right_bump());
         return(response);
     }
 }
