@@ -65,12 +65,12 @@ namespace rolley
         this->_motors.spin(direction, speed);
         if (direction == LEFT) {
             Serial.println("    spinning LEFT");
-            this->_encoders.set_left_direction(BACK);
-            this->_encoders.set_right_direction(FORWARD);
-        } else {
-            Serial.println("    spinning RIGHT");
             this->_encoders.set_left_direction(FORWARD);
             this->_encoders.set_right_direction(BACK);
+        } else {
+            Serial.println("    spinning RIGHT");
+            this->_encoders.set_left_direction(BACK);
+            this->_encoders.set_right_direction(FORWARD);
         }
     }
 
@@ -142,6 +142,16 @@ namespace rolley
 		this->_move_meters_setup(speed, direction);
 		this->_move_meters = meters;
 	}
+    
+	void Rolley::forward_meters(uint8_t speed, float meters)
+	{
+        this->move_meters(speed, meters, MOTOR_FORWARD);
+	}
+
+	void Rolley::backward_meters(uint8_t speed, float meters)
+	{
+        this->move_meters(speed, meters, MOTOR_REVERSE);
+	}
 
 	boolean Rolley::is_done_moving()
 	{
@@ -155,22 +165,44 @@ namespace rolley
     {
         float start_angle = this->compass_heading();
         this->spin(direction, speed);
+        this->compass_update();
         while (fabs(this->compass_heading() - start_angle) < degrees) {
             delay(50);
+            this->compass_update();
         }
         this->stop();
     }
 
     void Rolley::spin_degrees(rolley::directions_t direction, uint8_t speed, float degrees)
     {
-        this->_start_angle = this->compass_heading();
-        this->_spin_angle = degrees;
+        float heading;
+
+        this->compass_update();
+        Serial.print("    compass:START:");
+        Serial.print(this->_compass.test());
+        heading = this->compass_heading();
+        if (direction == LEFT) {
+            this->_heading = heading - degrees;
+        } else {
+            this->_heading = heading + degrees;
+        }
+        if (this->_heading < 0) {
+            this->_heading += 360;
+        }
+        if (this->_heading > 360) {
+            this->_heading -= 360;
+        }
+        Serial.print(":target:");
+        Serial.print(this->_heading);
         this->spin(direction, speed);
     }
     
 	boolean Rolley::is_done_spinning()
 	{
-        if (fabs(this->compass_heading() - this->_start_angle) >= this->_spin_angle) {
+        this->compass_update();
+        if (fabs(this->compass_heading() - this->_heading) <= 5) {
+            Serial.print("    compass:DONE:");
+            Serial.println(this->_compass.test());
 			return true;
 		}
 		return false;
@@ -342,11 +374,49 @@ namespace rolley
         delay(2000);
     }
 
+    void Rolley::spin_test()
+    {
+        this->spin_degrees_now(LEFT, 40, 45);
+        delay(2000);
+        this->spin_degrees_now(RIGHT, 40, 45);
+        delay(2000);
+        this->spin_degrees_now(LEFT, 40, 90);
+        delay(2000);
+        this->spin_degrees_now(RIGHT, 40, 90);
+        delay(2000);
+        this->spin_degrees_now(LEFT, 40, 135);
+        delay(2000);
+        this->spin_degrees_now(RIGHT, 40, 135);
+        delay(2000);
+        this->spin_degrees_now(LEFT, 40, 180);
+        delay(2000);
+        this->spin_degrees_now(RIGHT, 40, 180);
+        delay(5000);
+    }
+
+    void Rolley::movement_test()
+    {
+        Serial.print("FORWARD:  ");
+        Serial.print(this->_encoders.test());
+        this->encoders_reset();
+        this->forward_meters_now(100, .5);
+        Serial.print("|");
+        Serial.println(this->_encoders.test());
+        delay(2000);
+        Serial.print("FORWARD:  ");
+        this->encoders_reset();
+        Serial.print(this->_encoders.test());
+        this->backward_meters_now(100, .5);
+        Serial.print("|");
+        Serial.println(this->_encoders.test());
+        delay(2000);
+    }
+
     void Rolley::sensor_test()
     {
         Serial.print(this->_servo.test());
         Serial.print("|");
-        Serial.print(this->_sonar.test());
+        Serial.println(this->_sonar.test());
         Serial.print("|");
         Serial.print(this->_bump.test());
         Serial.print("|");

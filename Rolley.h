@@ -60,7 +60,9 @@ namespace rolley
             void stop();
             void spin(rolley::directions_t, uint8_t);
 
+            void forward_meters(uint8_t, float);
             void forward_meters_now(uint8_t, float);
+            void backward_meters(uint8_t, float);
             void backward_meters_now(uint8_t, float);
 
 			void move_meters(uint8_t, float, int);
@@ -100,13 +102,14 @@ namespace rolley
             float compass_heading();
 
             void motor_test();
+            void spin_test();
+            void movement_test();
             void sensor_test();
         private:
             void _move_meters_now(uint8_t, float, int);
             void _move_meters_setup(uint8_t, int);
 			float _move_meters;
-			float _spin_angle;
-			float _start_angle;
+			float _heading;
             rolley::Drive _motors;
             rolley::Bump _bump;
             rolley::RolleyServo _servo;
