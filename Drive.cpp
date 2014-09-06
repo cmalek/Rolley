@@ -79,11 +79,11 @@ namespace rolley
         analogWrite (this->_left_speed_pin, act_speed);
         analogWrite (this->_right_speed_pin, act_speed);    
         if (direction == LEFT) {
+            digitalWrite(this->_left_direction_pin, MOTOR_FORWARD);
+            digitalWrite(this->_right_direction_pin, MOTOR_REVERSE);
+        } else {
             digitalWrite(this->_left_direction_pin, MOTOR_REVERSE);    
             digitalWrite(this->_right_direction_pin, MOTOR_FORWARD);
-        } else {
-            digitalWrite(this->_left_direction_pin, MOTOR_FORWARD);    
-            digitalWrite(this->_right_direction_pin, MOTOR_REVERSE);
         }
     }
 
