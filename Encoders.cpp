@@ -45,14 +45,14 @@ namespace rolley
     inline void ResetLeft()
     {
         noInterrupts();
-        left_count = 30;
+        left_count = 0;
         interrupts();
     }
 
     inline void ResetRight()
     {
         noInterrupts();
-        right_count = 30;
+        right_count = 0;
         interrupts();
     }
 
