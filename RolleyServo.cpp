@@ -31,10 +31,11 @@ namespace rolley
         this->_servo->write(pos);
     }
 
-    void RolleyServo::set_scan_range(int start = 0, int end = 180)
+    void RolleyServo::set_scan_range(int start = 0, int end = 180, int step = 1)
     {
         this->_range_start = start;
         this->_range_end = end;
+        this->_range_step = step;
     }
 
     void RolleyServo::scan()
@@ -52,10 +53,10 @@ namespace rolley
         }
 
         if (this->_pos + this->_increment > this->_range_end) {
-            this->_increment = -1;
+            this->_increment = -this->_range_step;
         }
         if (this->_pos + this->_increment < this->_range_start) {
-            this->_increment = 1;
+            this->_increment = this->_range_step;
         }
         this->_pos += this->_increment;
         this->set_position(this->_pos);

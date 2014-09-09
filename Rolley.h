@@ -78,7 +78,7 @@ namespace rolley
 
             int servo_get_position();
             void servo_set_position(int);
-            void servo_set_scan_range(int, int);
+            void servo_set_scan_range(int, int, int);
             void servo_scan();
 
             boolean bump_update();

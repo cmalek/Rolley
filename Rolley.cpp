@@ -241,9 +241,9 @@ namespace rolley
         this->_servo.set_position(pos);
     }
 
-    void Rolley::servo_set_scan_range(int start = 0, int end = 180)
+    void Rolley::servo_set_scan_range(int start = 0, int end = 180, int step = 1)
     {
-        this->_servo.set_scan_range(start, end);
+        this->_servo.set_scan_range(start, end, step);
     }
 
     void Rolley::servo_scan()

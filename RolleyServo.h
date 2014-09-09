@@ -13,7 +13,7 @@ namespace rolley
 
             int get_position();
             void set_position(int);
-            void set_scan_range(int, int);
+            void set_scan_range(int, int, int);
             void scan();
 
             char* test();
@@ -21,6 +21,7 @@ namespace rolley
             Servo *_servo;
             int _range_start;
             int _range_end;
+            int _range_step;
             int _pos;
             int _increment;
     };
