@@ -17,10 +17,14 @@ namespace rolley
         this->_sonar = sonar;
     }
 
-
     float Sonar::get_distance()
     {
-        return(this->_sonar->ping_median() / US_ROUNDTRIP_CM);
+        return(this->_sonar->ping_cm());
+    }
+
+    void Sonar::set_wall_distance(float distance)
+    {
+        this->_sonar_obstacle_distance = distance;
     }
 
     boolean Sonar::is_wall()

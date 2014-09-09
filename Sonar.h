@@ -16,6 +16,7 @@ namespace rolley
             void setup(NewPing *);
 
             float get_distance();
+            void set_wall_distance(float);
             boolean is_wall();
 
             char* test();

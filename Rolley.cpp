@@ -8,7 +8,10 @@
 
 namespace rolley
 {
-    Rolley::Rolley() {}
+    Rolley::Rolley() :
+        _heading(0),
+        _move_meters(0)
+    {}
 
     void Rolley::setup(Servo *servo, NewPing *sonar) 
     {
@@ -64,11 +67,9 @@ namespace rolley
         */
         this->_motors.spin(direction, speed);
         if (direction == LEFT) {
-            Serial.println("    spinning LEFT");
             this->_encoders.set_left_direction(FORWARD);
             this->_encoders.set_right_direction(BACK);
         } else {
-            Serial.println("    spinning RIGHT");
             this->_encoders.set_left_direction(BACK);
             this->_encoders.set_right_direction(FORWARD);
         }
@@ -178,8 +179,6 @@ namespace rolley
         float heading;
 
         this->compass_update();
-        Serial.print("    compass:START:");
-        Serial.print(this->_compass.test());
         heading = this->compass_heading();
         if (direction == LEFT) {
             this->_heading = heading - degrees;
@@ -192,8 +191,6 @@ namespace rolley
         if (this->_heading > 360) {
             this->_heading -= 360;
         }
-        Serial.print(":target:");
-        Serial.print(this->_heading);
         this->spin(direction, speed);
     }
     
@@ -201,8 +198,6 @@ namespace rolley
 	{
         this->compass_update();
         if (fabs(this->compass_heading() - this->_heading) <= 5) {
-            Serial.print("    compass:DONE:");
-            Serial.println(this->_compass.test());
 			return true;
 		}
 		return false;
@@ -220,6 +215,11 @@ namespace rolley
     float Rolley::sonar_get_distance()
     {
         return(this->_sonar.get_distance());
+    }
+
+    void Rolley::sonar_set_wall_distance(float distance)
+    {
+        return(this->_sonar.set_wall_distance(distance));
     }
 
     boolean Rolley::is_sonar_wall()

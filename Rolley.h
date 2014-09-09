@@ -73,6 +73,7 @@ namespace rolley
 			boolean is_done_spinning();
 
             float sonar_get_distance();
+            void sonar_set_wall_distance(float);
             boolean is_sonar_wall();
 
             int servo_get_position();
@@ -106,10 +107,10 @@ namespace rolley
             void movement_test();
             void sensor_test();
         private:
-            void _move_meters_now(uint8_t, float, int);
-            void _move_meters_setup(uint8_t, int);
 			float _move_meters;
 			float _heading;
+            void _move_meters_now(uint8_t, float, int);
+            void _move_meters_setup(uint8_t, int);
             rolley::Drive _motors;
             rolley::Bump _bump;
             rolley::RolleyServo _servo;
